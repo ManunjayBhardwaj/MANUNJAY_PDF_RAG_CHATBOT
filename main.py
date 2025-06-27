@@ -1,17 +1,14 @@
 import streamlit as st
 from pathlib import Path
-from dotenv import load_dotenv
 from langchain_community.document_loaders import PyPDFLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_openai import OpenAIEmbeddings
 from langchain_community.vectorstores import Qdrant
 from openai import OpenAI
-import os
 import tempfile
 
-# Load API key and client
-load_dotenv()
-client = OpenAI()
+# Load OpenAI client using secret key
+client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 
 st.set_page_config(page_title="📘 PDF RAG Chatbot", layout="centered")
 st.title("📘 PDF RAG Chatbot with Qdrant")
@@ -46,12 +43,16 @@ if uploaded_file:
         for doc in split_docs:
             doc.metadata["source"] = uploaded_file.name
 
-        embeddings = OpenAIEmbeddings(model="text-embedding-3-large")
+        embeddings = OpenAIEmbeddings(
+            model="text-embedding-3-large",
+            api_key=st.secrets["OPENAI_API_KEY"]
+        )
 
         vector_store = Qdrant.from_documents(
             documents=split_docs,
             embedding=embeddings,
-            url = os.getenv("QDRANT_CLOUD_URL"),
+            url=st.secrets["QDRANT_CLOUD_URL"],
+            api_key=st.secrets["QDRANT_API_KEY"],
             collection_name="learning_vectors",
             force_recreate=True
         )
@@ -82,11 +83,11 @@ if st.session_state.vector_store:
             ])
 
         SYSTEM_PROMPT = f"""
-        You are a help full AI Assistant who answers user query based on the available context
-        retrieved from a PDF file along with page_contents and page number.
+        You are a helpful AI Assistant who answers user queries based on the available context
+        retrieved from a PDF file along with page contents and page numbers.
 
-        You should only ans the user based on the following context and navigate the user
-        to open the right page number to know more.
+        You should only answer based on the following context and help navigate the user
+        to the right page to explore more.
 
         Context:
         {context}
@@ -106,11 +107,12 @@ if st.session_state.vector_store:
 
         st.session_state.messages.append({"role": "assistant", "content": ai_reply})
 
+# Footer
 st.markdown(
     """
     <hr style="margin-top: 2rem; margin-bottom: 1rem;">
     <div style='text-align: center; color: gray; font-size: 0.9rem'>
-        🚀 Built with ❤️ by <b> Manunjay Bhardwaj</b> | Powered by LangChain, OpenAI & Qdrant
+        🚀 Built with ❤️ by <b>Manunjay Bhardwaj</b> | Powered by LangChain, OpenAI & Qdrant
     </div>
     """,
     unsafe_allow_html=True
