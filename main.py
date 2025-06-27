@@ -8,10 +8,7 @@ from openai import OpenAI
 import tempfile
 
 # Load OpenAI client using secret key
-client = OpenAI(
-    api_key="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",
-    base_url="https://api.groq.com/openai/v1"
-)
+client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 
 st.set_page_config(page_title="📘 PDF RAG Chatbot", layout="centered")
 st.title("📘 PDF RAG Chatbot with Qdrant")
@@ -48,14 +45,14 @@ if uploaded_file:
 
         embeddings = OpenAIEmbeddings(
             model="text-embedding-3-large",
-            api_key="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"
+            api_key=st.secrets["OPENAI_API_KEY"]
         )
 
         vector_store = Qdrant.from_documents(
             documents=split_docs,
             embedding=embeddings,
-            url="https://dfa74afb-21f2-454e-9314-c4df231a3822.europe-west3-0.gcp.cloud.qdrant.io:6333",
-            api_key="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3MiOiJtIn0.iiY8YYaVdcDEr5BAktATJgxWImqVZ1fY_AnWfNQ88UM",
+            url=st.secrets["QDRANT_CLOUD_URL"],
+            api_key=st.secrets["QDRANT_API_KEY"],
             collection_name="learning_vectors",
             force_recreate=True
         )
@@ -102,7 +99,7 @@ if st.session_state.vector_store:
 
         with st.chat_message("assistant"):
             response = client.chat.completions.create(
-                model="llama3-8b-8192",
+                model="gpt-4.1",
                 messages=messages
             )
             ai_reply = response.choices[0].message.content
