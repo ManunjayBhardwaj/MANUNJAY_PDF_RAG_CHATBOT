@@ -8,7 +8,7 @@ from openai import OpenAI
 import tempfile
 
 # Load OpenAI client using secret key
-client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
+client = OpenAI(api_key="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")
 
 st.set_page_config(page_title="📘 PDF RAG Chatbot", layout="centered")
 st.title("📘 PDF RAG Chatbot with Qdrant")
@@ -45,14 +45,14 @@ if uploaded_file:
 
         embeddings = OpenAIEmbeddings(
             model="text-embedding-3-large",
-            api_key=st.secrets["OPENAI_API_KEY"]
+            api_key="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"
         )
 
         vector_store = Qdrant.from_documents(
             documents=split_docs,
             embedding=embeddings,
-            url=st.secrets["QDRANT_CLOUD_URL"],
-            api_key=st.secrets["QDRANT_API_KEY"],
+            url="https://dfa74afb-21f2-454e-9314-c4df231a3822.europe-west3-0.gcp.cloud.qdrant.io:6333",
+            api_key="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3MiOiJtIn0.iiY8YYaVdcDEr5BAktATJgxWImqVZ1fY_AnWfNQ88UM",
             collection_name="learning_vectors",
             force_recreate=True
         )
