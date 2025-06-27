@@ -8,7 +8,7 @@ from openai import OpenAI
 import tempfile
 
 # Load OpenAI client using secret key
-client = OpenAI(api_key="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")
+client = OpenAI(api_key="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")
 
 st.set_page_config(page_title="📘 PDF RAG Chatbot", layout="centered")
 st.title("📘 PDF RAG Chatbot with Qdrant")
@@ -45,7 +45,7 @@ if uploaded_file:
 
         embeddings = OpenAIEmbeddings(
             model="text-embedding-3-large",
-            api_key="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"
+            api_key="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"
         )
 
         vector_store = Qdrant.from_documents(
