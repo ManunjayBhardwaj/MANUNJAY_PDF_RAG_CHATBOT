@@ -25,16 +25,9 @@ This project is a fully functional PDF-based **RAG (Retrieval-Augmented Generati
 
 ---
 
-## 📁 Project Structure
+## 📁 Website Working Link
 
-```
-RAG_CHAT/
-├── app.py               # Main Streamlit app
-├── requirements.txt     # All dependencies
-├── .streamlit/
-│   └── secrets.toml     # API keys (on cloud)
-└── README.md            # This file
-```
+-
 
 ---
 
